@@ -23,9 +23,9 @@ public interface AccountService {
 
 	void saveAccount(Account accountRequest);
 	
-	Deposit deposit(Double value, Account sourceAccount, Account destinationAccount);
+	Deposit deposit(Double value, Account sourceAccount);
 	
-	Withdraw withdraw(Double value, Account sourceAccount, Account destinationAccount);
+	Withdraw withdraw(Double value, Account sourceAccount);
 	
 	Transfer transfer(Double value, Account sourceAccount, Account destinationAccount);
 

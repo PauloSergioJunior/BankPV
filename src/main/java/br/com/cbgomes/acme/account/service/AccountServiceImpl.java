@@ -84,21 +84,46 @@ public class AccountServiceImpl implements AccountService {
     }
 
 	@Override
-	public Deposit deposit(Double value, Account sourceAccount, Account destinationAccount) {
-		
-		sourceAccount.setBalance(sourceAccount.getBalance() - value);
-		destinationAccount.setBalance(destinationAccount.getBalance() + value);
-		
-		return null;
+	public Deposit deposit(Double value, Account sourceAccount) {
+
+		if (sourceAccount.getBalance() < 0) {
+
+			sourceAccount.setBalance(value - sourceAccount.getBalance() * 1.005);
+
+			Deposit deposit = new Deposit();
+			deposit.setAmountReceived(value);
+			deposit.setAmountCurrent(sourceAccount.getBalance());
+			return deposit;
+		}
+
+		sourceAccount.setBalance(sourceAccount.getBalance() + value);
+		Deposit deposit = new Deposit();
+		deposit.setAmountReceived(value);
+		deposit.setAmountCurrent(sourceAccount.getBalance());
+
+		return deposit;
+
 	}
 
 	@Override
-	public Withdraw withdraw(Double value, Account sourceAccount, Account destinationAccount) {
+	public Withdraw withdraw(Double value, Account sourceAccount) {
 		
-		sourceAccount.setBalance(sourceAccount.getBalance() + value);
-		destinationAccount.setBalance(destinationAccount.getBalance() - value);
+		Withdraw withdraw = new Withdraw();
 		
-		return null;
+		if(sourceAccount.getBalance() > -999) {
+			
+		sourceAccount.setBalance(sourceAccount.getBalance() - value);
+		
+		withdraw.setAmountDrawer(value);
+		withdraw.setAmountRemaining(sourceAccount.getBalance());
+		
+		return withdraw;
+		
+		}else {
+			
+			return new Withdraw();
+		}
+		
 	}
 
 	@Override
