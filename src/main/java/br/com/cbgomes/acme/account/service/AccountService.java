@@ -4,9 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import br.com.cbgomes.acme.account.domain.Account;
-import br.com.cbgomes.acme.transaction.domain.Deposit;
-import br.com.cbgomes.acme.transaction.domain.Transfer;
-import br.com.cbgomes.acme.transaction.domain.Withdraw;
 
 
 public interface AccountService {
@@ -23,10 +20,4 @@ public interface AccountService {
 
 	void saveAccount(Account accountRequest);
 	
-	Deposit deposit(Double value, Account sourceAccount);
-	
-	Withdraw withdraw(Double value, Account sourceAccount);
-	
-	Transfer transfer(Double value, Account sourceAccount, Account destinationAccount);
-
 }

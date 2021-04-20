@@ -1,7 +1,7 @@
 package br.com.cbgomes.acme.account.domain.dto;
 
 import br.com.cbgomes.acme.client.domain.dto.ClientDTO;
-import br.com.cbgomes.acme.enuns.TypeAccount;
+import br.com.cbgomes.acme.enuns.TypeAccountEnus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +17,7 @@ public class AccountDTO {
 	
 	private ClientDTO client;
 	
-	private TypeAccount typeAccount;
+	private TypeAccountEnus typeAccount;
 	
 	private int numberAccount;
 	

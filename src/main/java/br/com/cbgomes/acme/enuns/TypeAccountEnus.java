@@ -1,6 +1,6 @@
 package br.com.cbgomes.acme.enuns;
 
-public enum TypeAccount {
+public enum TypeAccountEnus {
 
 	AccountSaving, CurrentAccount;
 	

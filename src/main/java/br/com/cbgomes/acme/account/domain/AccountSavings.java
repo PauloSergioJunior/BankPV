@@ -2,7 +2,7 @@ package br.com.cbgomes.acme.account.domain;
 
 import javax.persistence.Column;
 
-import br.com.cbgomes.acme.enuns.Rate;
+import br.com.cbgomes.acme.enuns.RateEnuns;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,7 +20,7 @@ public class AccountSavings extends Account {
         accountSavings.setNumberAgency(account.getNumberAgency());
         accountSavings.setBalance(account.getBalance());
         accountSavings.setClient(account.getClient());
-        accountSavings.setInterestRate(Rate.INTEREST_RATE.rate);
+        accountSavings.setInterestRate(RateEnuns.INTEREST_RATE.rate);
 
         return accountSavings;
     }
