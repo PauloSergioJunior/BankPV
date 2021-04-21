@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.cbgomes.acme.account.domain.Account;
 import br.com.cbgomes.acme.account.domain.dto.AccountConverterDTO;
 import br.com.cbgomes.acme.account.domain.dto.AccountDTO;
 import br.com.cbgomes.acme.account.service.AccountService;
+import br.com.cbgomes.acme.enuns.TypeAccountEnus;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -35,39 +37,42 @@ public class AccountResource {
 	
 	@GetMapping("/{numberAccount}")
 	@ResponseStatus(code = HttpStatus.OK)
-	public ResponseEntity<AccountDTO> getAccountByNumberAccount(@PathVariable("numberAccount") Long numberAccount) {
+	public ResponseEntity<AccountDTO> getAccountByNumberAccount(@PathVariable int numberAccount) {
 		return ResponseEntity.ok(AccountConverterDTO.convertToAccountDTO(this.service.getByNumberAccount(numberAccount).get()));
 	}
 	
 	@GetMapping("/typeAccount/{typeAccount}")
 	@ResponseStatus(code = HttpStatus.OK)
-	public ResponseEntity<List<AccountDTO>> getAccountByTypeAccount(@PathVariable("typeAccount") Long typeAccount) {
+	public ResponseEntity<List<AccountDTO>> getAccountByTypeAccount(@PathVariable TypeAccountEnus typeAccount) {
 		return ResponseEntity.ok(AccountConverterDTO.conveterListAccount(this.service.getByTypeAccount(typeAccount)));
 	}
 
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public ResponseEntity<AccountDTO> createAccount(@RequestBody AccountDTO dto) {
-		return ResponseEntity.ok(AccountConverterDTO.convertToAccountDTO(this.service.create(AccountConverterDTO.convertToAccount(dto))));
+	public ResponseEntity<?> createAccount(@RequestBody Account account) {
+		
+		service.saveAccount(account);
+		
+		return ResponseEntity.ok().build();
 	}
 	
 
 	@PutMapping()
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public ResponseEntity<AccountDTO> updateClient(@RequestBody AccountDTO dto,@RequestParam("number_account") Long number_account) throws Exception {
+	public ResponseEntity<AccountDTO> updateClient(@RequestBody AccountDTO dto,@RequestParam("number_account") int number_account) throws Exception {
 		return ResponseEntity.ok(AccountConverterDTO.convertToAccountDTO(this.service.create(this.service.getByNumberAccount(number_account).get())));	
 	
 	}
 	
-	@DeleteMapping("/{numberAccount}")
+	@DeleteMapping("/{number_account}")
 	@ResponseStatus(code = HttpStatus.OK)
-	public ResponseEntity<Void> deleteClient(@PathVariable("number_account") Long number_account) {
-		try {
+	public ResponseEntity<Void> deleteAccount(@PathVariable int number_account) {
+	//try {
 			this.service.removeByNumberAccount(number_account);
 			return ResponseEntity.ok().build();
 			
-		} catch (Exception e) {
-			return ResponseEntity.noContent().build();
-		}
+//		} catch (Exception e) {
+//			return ResponseEntity.noContent().build();
+//		}
 	}
 }

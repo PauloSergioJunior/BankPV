@@ -1,7 +1,10 @@
 package br.com.cbgomes.acme.operations.service;
 
+import java.text.DecimalFormat;
+
 import org.springframework.stereotype.Service;
 
+import br.com.cbgomes.acme.account.service.AccountServiceImpl;
 import br.com.cbgomes.acme.enuns.RateEnuns;
 import br.com.cbgomes.acme.enuns.TypeAccountEnus;
 import br.com.cbgomes.acme.transaction.dto.DepositDTO;
@@ -15,17 +18,26 @@ import lombok.RequiredArgsConstructor;
 public class OperationsServiceImpl implements OperationService{
 
 	
+	private final AccountServiceImpl serviceAccount;
+	
 	@Override
 	public DepositDTO deposit(DepositDTO deposit) {
 
+		deposit.setAccount(serviceAccount.getAccountByID(deposit.getAccount().getId()));
+		
 		if (deposit.getAccount().getBalance() < 0) {
 
-			deposit.getAccount().setBalance(deposit.getValue() - deposit.getAccount().getBalance() * RateEnuns.NEGATIVE_DEPOSIT_RATE.rate);
-
+			deposit.getAccount().setBalance(deposit.getValue() + deposit.getAccount().getBalance() * RateEnuns.NEGATIVE_DEPOSIT_RATE.rate);
+			
+			serviceAccount.create(deposit.getAccount());
+			
 			return deposit;
 		}
 
 		deposit.getAccount().setBalance(deposit.getAccount().getBalance() + deposit.getValue());
+		
+		serviceAccount.create(deposit.getAccount());
+		
 		return deposit;
 
 	}
@@ -33,11 +45,14 @@ public class OperationsServiceImpl implements OperationService{
 	@Override
 	public WithdrawDTO withdraw(WithdrawDTO withdraw) {
 		
+		withdraw.setAccount(serviceAccount.getAccountByID(withdraw.getAccount().getId()));
 		
 		if(withdraw.getAccount().getBalance() > -999) {
 			
 			withdraw.getAccount().setBalance(withdraw.getAccount().getBalance() - withdraw.getValue());
 		
+			serviceAccount.create(withdraw.getAccount());
+			
 		return withdraw;
 		
 		}else {
@@ -50,6 +65,8 @@ public class OperationsServiceImpl implements OperationService{
 	@Override
 	public TransferDTO transfer(TransferDTO transfer) {
 
+		transfer.setSourceAccount(serviceAccount.getAccountByID(transfer.getSourceAccount().getId()));
+		transfer.setDestinationAccount(serviceAccount.getAccountByID(transfer.getDestinationAccount().getId()));
 		
 		if(transfer.getSourceAccount().getNumberAgency() == transfer.getDestinationAccount().getNumberAgency() 
 				&& verifyBalanceAccount(transfer)) {
@@ -69,6 +86,9 @@ public class OperationsServiceImpl implements OperationService{
 				&& transfer.getSourceAccount().getTypeAccount() == TypeAccountEnus.CurrentAccount
 				&& transfer.getDestinationAccount().getTypeAccount() == TypeAccountEnus.CurrentAccount) {
 			
+			
+			Double originalValue = transfer.getValue();
+			
 			transfer.setValue(transfer.getValue() * RateEnuns.CURRENT_ACCOUNT_RATE.rate);
 			
 			WithdrawDTO withdraw = new WithdrawDTO();
@@ -78,17 +98,11 @@ public class OperationsServiceImpl implements OperationService{
 			
 			DepositDTO deposit = new DepositDTO();
 			deposit.setAccount(transfer.getDestinationAccount());
-			deposit.setValue(transfer.getValue());
+			deposit.setValue(originalValue);
 			deposit(deposit);
 			
 		}
-		
-//		conta corrente de diferentes agencias:
-//		      **transfer = valueTransfer*1,0001);**
-//		contas correntes pertencentes a mesma agencia:
-//		      **transfer =-valueTransfer**
-//		conta poupança rendimento:
-//		      valueSavings = balance*1,002
+
 		
 		return null;
 	}

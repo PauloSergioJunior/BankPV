@@ -27,23 +27,24 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public Optional<Account> getByNumberAccount(Long numberAccount) {
+	public Optional<Account> getByNumberAccount(int numberAccount) {
 		return this.repository.findByNumberAccount(numberAccount);
 	}
 	
 	@Override
-	public List<Account> getByTypeAccount(Long numberAccount) {
-		return this.repository.findByTypeAccount(numberAccount);
+	public List<Account> getByTypeAccount(TypeAccountEnus typeEnus) {
+		return this.repository.findByTypeAccount(typeEnus);
 	}
 	
 	@Override
-	public void removeByNumberAccount(Long numberAccount) throws Exception {
+	public void removeByNumberAccount(int numberAccount) {
 		Account account = this.repository.findByNumberAccount(numberAccount).get();
 		if(account != null) {
-			 this.repository.delete(account);
+			 //this.repository.delete(account);
+			 this.repository.deleteById(account.getId());
 		}
 		
-		throw new Exception("Account not found");
+		//throw new Exception("Account not found");
 	}
 	
 	@Override
@@ -58,14 +59,14 @@ public class AccountServiceImpl implements AccountService {
         Client client = null;
         Account account = null; 
 
-        if(accountRequest.getTypeAccount().compareTo(TypeAccountEnus.CurrentAccount) > 0){
+        if(accountRequest.getTypeAccount().compareTo(TypeAccountEnus.CurrentAccount) == 0){
 
             client = clientService.getById(idClient).get();
 
             accountRequest.setClient(client);
             account = CurrentAccount.builder(accountRequest);
         }
-        else if(accountRequest.getTypeAccount().compareTo(TypeAccountEnus.AccountSaving) > 0) {
+        else if(accountRequest.getTypeAccount().compareTo(TypeAccountEnus.AccountSaving) == 0) {
 
             client = clientService.getById(idClient).get();
 
@@ -79,6 +80,14 @@ public class AccountServiceImpl implements AccountService {
         repository.save(account);
         
     }
+
+	@Override
+	public Account getAccountByID(Long id) {
+
+		return this.repository.findById(id).get();
+
+		
+	}
 
 	
 }

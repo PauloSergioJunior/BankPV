@@ -4,20 +4,23 @@ import java.util.List;
 import java.util.Optional;
 
 import br.com.cbgomes.acme.account.domain.Account;
+import br.com.cbgomes.acme.enuns.TypeAccountEnus;
 
 
 public interface AccountService {
 	
 	List<Account> getAll();
 	
-	Optional<Account> getByNumberAccount(Long numberAccount);
+	Optional<Account> getByNumberAccount(int numberAccount);
 	
-	void removeByNumberAccount(Long numberAccount) throws Exception;
+	void removeByNumberAccount(int numberAccount);
 	
 	Account create(Account account);
 
-	List<Account> getByTypeAccount(Long typeAccount);
+	List<Account> getByTypeAccount(TypeAccountEnus typeAccount);
 
 	void saveAccount(Account accountRequest);
+	
+	Account getAccountByID(Long id);
 	
 }

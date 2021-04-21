@@ -1,15 +1,22 @@
 package br.com.cbgomes.acme.account.domain;
 
+import javax.persistence.Entity;
+
+import br.com.cbgomes.acme.enuns.TypeAccountEnus;
+import lombok.NoArgsConstructor;
+
+@Entity
+@NoArgsConstructor
 public class CurrentAccount extends Account {
 
+	
+	public CurrentAccount(Account account) {
+		super(null,account.getClient(),TypeAccountEnus.CurrentAccount,account.getNumberAccount(),account.getNumberAgency(),account.getBalance());
+    
+	}
+	
 	 public static CurrentAccount builder(Account account) {
-		 CurrentAccount currentAccount = new CurrentAccount();
-	        currentAccount.setNumberAccount(account.getNumberAccount());
-	        currentAccount.setNumberAgency(account.getNumberAgency());
-	        currentAccount.setBalance(account.getBalance());
-	        currentAccount.setClient(account.getClient());
-
-	        return currentAccount;
+	        return  new CurrentAccount(account);
 	    }
 	
 }
